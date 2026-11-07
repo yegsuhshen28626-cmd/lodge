@@ -1762,6 +1762,19 @@
     ], lendQuestion), 900);
   }
   // ---- 출구를 나간 뒤: 산사태 ----
+  // 빨간 글씨 하나: 크기·위치·기울기가 제각각, 짧게 떨다 사라짐
+  function scatterText(word, big) {
+    const e = document.createElement("div");
+    e.className = "scatterTxt";
+    e.textContent = word;
+    e.style.fontSize = (big ? 120 : 18 + Math.random() * 44) + "px";
+    e.style.left = (5 + Math.random() * 70) + "%";
+    e.style.top = (8 + Math.random() * 80) + "%";
+    e.style.transform = "rotate(" + ((Math.random() - 0.5) * 22).toFixed(1) + "deg)";
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), big ? 900 : 650 + Math.random() * 300);
+  }
+
   function landslide(at) {
     // 땅이 울리는 굉음
     const n = ac.createBufferSource(); n.buffer = noiseBuffer(9, true);
@@ -1783,19 +1796,6 @@
         c.connect(bp).connect(cg).connect(ac.destination); c.start(at + t);
       }
     }
-    // 빨간 글씨 하나: 크기·위치·기울기가 제각각, 짧게 떨다 사라짐
-  function scatterText(word, big) {
-    const e = document.createElement("div");
-    e.className = "scatterTxt";
-    e.textContent = word;
-    e.style.fontSize = (big ? 120 : 18 + Math.random() * 44) + "px";
-    e.style.left = (5 + Math.random() * 70) + "%";
-    e.style.top = (8 + Math.random() * 80) + "%";
-    e.style.transform = "rotate(" + ((Math.random() - 0.5) * 22).toFixed(1) + "deg)";
-    document.body.appendChild(e);
-    setTimeout(() => e.remove(), big ? 900 : 650 + Math.random() * 300);
-  }
-
   // 나무 부러지는 소리
     [1.2, 2.2, 3.1].forEach(d => {
       for (let k = 0; k < 3; k++) {
@@ -2079,7 +2079,7 @@
       n.id = "dayBox";
       n.querySelector('[data-p="hold"]').addEventListener("click", () => endingHold(n));
       n.querySelector('[data-p="look"]').addEventListener("click", () => cellarLook(n));
-      n.querySelector('[data-p="run"]').addEventListener("click", () => landslide(n));
+      n.querySelector('[data-p="run"]').addEventListener("click", () => fleeLandslide(n));
     }, 4500);
   }
 
@@ -2334,7 +2334,7 @@
   }
 
   // ---- 도망친다 → 산사태 → 휩쓸림 (소리 + 붉은 오류 글씨, 피 묘사 없음) ----
-  function landslide(n) {
+  function fleeLandslide(n) {
     n.classList.remove("up");
     setTimeout(() => n.remove(), 500);
     const t0 = ac.currentTime + 0.1;
